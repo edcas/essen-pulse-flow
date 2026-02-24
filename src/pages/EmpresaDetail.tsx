@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getEmpresa, getEmpleadosByEmpresa, getCentrosByEmpresa } from "@/data/mockData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,9 +9,11 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowLeft, Users, MapPin, ClipboardCheck, FolderOpen, Network, GraduationCap,
-  Search, Download, Building2, CheckCircle2, Clock, AlertCircle, Calendar, BarChart3, FileText
+  Search, Download, Building2, CheckCircle2, Clock, AlertCircle, Calendar, BarChart3, FileText,
+  BrainCircuit, Sparkles, Pencil, Save, ShieldAlert, TrendingUp, Lightbulb, ChevronDown, ChevronUp
 } from "lucide-react";
 
 const deptColor: Record<string, string> = {
@@ -27,7 +30,6 @@ function getInitials(name: string) {
   return name.split(" ").slice(0, 2).map(w => w[0]).join("");
 }
 
-// Mock evaluations per company
 const mockEvals = [
   { id: 1, name: "NOM-035 Anual", type: "NOM-035", status: "activa", respondents: 84, total: 200, end: "2026-03-01" },
   { id: 2, name: "Evaluación 360° Gerentes", type: "360°", status: "activa", respondents: 17, total: 20, end: "2026-03-10" },
@@ -40,7 +42,6 @@ const typeColors: Record<string, string> = {
   "360°": "bg-primary/10 text-primary border-primary/20",
 };
 
-// Simple org chart per company
 interface OrgNode {
   name: string;
   position: string;
@@ -49,35 +50,18 @@ interface OrgNode {
 }
 
 const orgTemplate: OrgNode = {
-  name: "Director General",
-  position: "Dirección",
-  initials: "DG",
+  name: "Director General", position: "Dirección", initials: "DG",
   children: [
-    {
-      name: "Dir. Comercial",
-      position: "Ventas",
-      initials: "DC",
-      children: [
-        { name: "Supervisor A", position: "Ventas", initials: "SA" },
-        { name: "Supervisor B", position: "Ventas", initials: "SB" },
-      ],
-    },
-    {
-      name: "Dir. RRHH",
-      position: "RRHH",
-      initials: "RH",
-      children: [
-        { name: "Analista RRHH", position: "RRHH", initials: "AR" },
-      ],
-    },
-    {
-      name: "Dir. Operaciones",
-      position: "Operaciones",
-      initials: "DO",
-      children: [
-        { name: "Coord. Logística", position: "Operaciones", initials: "CL" },
-      ],
-    },
+    { name: "Dir. Comercial", position: "Ventas", initials: "DC", children: [
+      { name: "Supervisor A", position: "Ventas", initials: "SA" },
+      { name: "Supervisor B", position: "Ventas", initials: "SB" },
+    ]},
+    { name: "Dir. RRHH", position: "RRHH", initials: "RH", children: [
+      { name: "Analista RRHH", position: "RRHH", initials: "AR" },
+    ]},
+    { name: "Dir. Operaciones", position: "Operaciones", initials: "DO", children: [
+      { name: "Coord. Logística", position: "Operaciones", initials: "CL" },
+    ]},
   ],
 };
 
@@ -86,9 +70,7 @@ function OrgNodeCard({ node, isRoot = false }: { node: OrgNode; isRoot?: boolean
     <div className="flex flex-col items-center">
       <div className={`rounded-xl border border-border bg-card p-3 shadow-card text-center min-w-[140px] hover:shadow-elevated transition-shadow cursor-pointer ${isRoot ? "ring-2 ring-primary/30" : ""}`}>
         <Avatar className="h-8 w-8 mx-auto mb-1.5">
-          <AvatarFallback className={`text-xs font-semibold ${isRoot ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}>
-            {node.initials}
-          </AvatarFallback>
+          <AvatarFallback className={`text-xs font-semibold ${isRoot ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}>{node.initials}</AvatarFallback>
         </Avatar>
         <p className="text-xs font-semibold">{node.name}</p>
         <p className="text-[10px] text-muted-foreground">{node.position}</p>
@@ -113,11 +95,83 @@ function OrgNodeCard({ node, isRoot = false }: { node: OrgNode; isRoot?: boolean
   );
 }
 
+// Mock data for diagnostico
+const areaRisks = [
+  { area: "Ventas", risk: "alto", score: 78, issues: ["Alta rotación", "Baja satisfacción salarial"], priority: 1 },
+  { area: "Operaciones", risk: "medio", score: 62, issues: ["Carga de trabajo excesiva", "Falta capacitación"], priority: 2 },
+  { area: "RRHH", risk: "bajo", score: 35, issues: ["Comunicación interna"], priority: 4 },
+  { area: "Finanzas", risk: "bajo", score: 28, issues: ["Sin hallazgos relevantes"], priority: 5 },
+  { area: "IT", risk: "medio", score: 55, issues: ["Burnout", "Falta de reconocimiento"], priority: 3 },
+];
+
+const riskColor: Record<string, { bg: string; text: string; label: string }> = {
+  alto: { bg: "bg-destructive", text: "text-destructive", label: "Alto" },
+  medio: { bg: "bg-warning", text: "text-warning", label: "Medio" },
+  bajo: { bg: "bg-success", text: "text-success", label: "Bajo" },
+};
+
+const defaultDiagnosticoInsight = `## Diagnóstico Integral — Resumen Ejecutivo
+
+La organización presenta un **nivel de riesgo moderado-alto** concentrado principalmente en las áreas de **Ventas** y **Operaciones**.
+
+### Hallazgos Clave
+- **Ventas** muestra los indicadores más preocupantes: alta rotación (23% anual) combinada con baja satisfacción salarial. Se recomienda intervención inmediata con revisión de esquema de compensación variable.
+- **Operaciones** reporta cargas de trabajo excesivas, particularmente en los centros de Monterrey y Guadalajara. La falta de capacitación técnica agrava el problema.
+- **IT** presenta señales tempranas de burnout que requieren monitoreo preventivo.
+
+### Acción con Mayor Retorno Esperado
+**Programa de compensación variable en Ventas** — Impacto estimado: reducción del 40% en rotación en 6 meses. Costo: bajo. Retorno: alto.
+
+### Recomendaciones Prioritarias
+1. Implementar programa de reconocimiento y compensación variable (Ventas) — *Servicio ESSEN: Consultoría Compensaciones*
+2. Redistribuir cargas de trabajo con análisis de puestos (Operaciones) — *Servicio ESSEN: Análisis Organizacional*
+3. Programa de bienestar y prevención de burnout (IT) — *Servicio ESSEN: Wellbeing Corporativo*`;
+
+// Mock action plans per evaluation
+const evalActionPlans: Record<number, { actions: { action: string; service: string; impact: string; priority: string }[]; insight: string }> = {
+  1: {
+    insight: "La evaluación NOM-035 revela factores de riesgo psicosocial **nivel medio-alto** en 3 de 5 dominios. Las áreas prioritarias son: liderazgo negativo, cargas de trabajo y falta de control sobre el trabajo. Se recomienda intervenir con el programa de liderazgo positivo de ESSEN.",
+    actions: [
+      { action: "Taller de liderazgo positivo para gerentes y supervisores", service: "ESSEN Capacitación - Liderazgo", impact: "Alto", priority: "Urgente" },
+      { action: "Redistribución de cargas de trabajo en Operaciones", service: "ESSEN Consultoría Organizacional", impact: "Alto", priority: "Urgente" },
+      { action: "Implementar política de desconexión digital", service: "ESSEN Wellbeing", impact: "Medio", priority: "Corto plazo" },
+      { action: "Capacitación en manejo de estrés para equipos", service: "ESSEN Capacitación - Bienestar", impact: "Medio", priority: "Corto plazo" },
+    ],
+  },
+  2: {
+    insight: "La evaluación 360° muestra que los gerentes tienen fortalezas en **orientación a resultados** pero áreas de mejora significativas en **comunicación** y **desarrollo de talento**. El 70% de los evaluados recibió feedback negativo de subordinados en habilidades de coaching.",
+    actions: [
+      { action: "Programa de coaching ejecutivo 1:1 para gerentes", service: "ESSEN Coaching Ejecutivo", impact: "Alto", priority: "Urgente" },
+      { action: "Taller de feedback efectivo y comunicación asertiva", service: "ESSEN Capacitación - Soft Skills", impact: "Alto", priority: "Corto plazo" },
+      { action: "Implementar sesiones de 1:1 quincenales obligatorias", service: "ESSEN Consultoría RRHH", impact: "Medio", priority: "Mediano plazo" },
+    ],
+  },
+  3: {
+    insight: "El clima organizacional refleja un **índice de satisfacción del 68%**, por debajo del benchmark de la industria (74%). Los factores con menor puntuación son: oportunidades de crecimiento, comunicación de la dirección y balance vida-trabajo.",
+    actions: [
+      { action: "Diseño de plan de carrera por puesto", service: "ESSEN Consultoría - Desarrollo de Talento", impact: "Alto", priority: "Urgente" },
+      { action: "Programa de comunicación interna transparente", service: "ESSEN Comunicación Organizacional", impact: "Alto", priority: "Corto plazo" },
+      { action: "Implementar programa de flexibilidad laboral", service: "ESSEN Wellbeing - Flexibilidad", impact: "Medio", priority: "Corto plazo" },
+      { action: "Encuesta pulso mensual para monitoreo continuo", service: "ESSEN Diagnóstico - Pulso", impact: "Bajo", priority: "Mediano plazo" },
+    ],
+  },
+};
+
+const priorityColor: Record<string, string> = {
+  Urgente: "bg-destructive/10 text-destructive border-destructive/20",
+  "Corto plazo": "bg-warning/10 text-warning border-warning/20",
+  "Mediano plazo": "bg-info/10 text-info border-info/20",
+};
+
 export default function EmpresaDetail() {
   const { empresaId } = useParams();
   const empresa = getEmpresa(empresaId || "");
   const empleados = getEmpleadosByEmpresa(empresaId || "");
   const centros = getCentrosByEmpresa(empresaId || "");
+
+  const [diagnosticoInsight, setDiagnosticoInsight] = useState(defaultDiagnosticoInsight);
+  const [isEditingDiagnostico, setIsEditingDiagnostico] = useState(false);
+  const [expandedEval, setExpandedEval] = useState<number | null>(null);
 
   if (!empresa) {
     return (
@@ -198,9 +252,10 @@ export default function EmpresaDetail() {
       <Tabs defaultValue="empleados" className="space-y-4">
         <TabsList className="flex-wrap">
           <TabsTrigger value="empleados" className="gap-1.5"><Users className="h-3.5 w-3.5" />Empleados</TabsTrigger>
-          <TabsTrigger value="centros" className="gap-1.5"><MapPin className="h-3.5 w-3.5" />Centros de Trabajo</TabsTrigger>
+          <TabsTrigger value="centros" className="gap-1.5"><MapPin className="h-3.5 w-3.5" />Centros</TabsTrigger>
           <TabsTrigger value="organigrama" className="gap-1.5"><Network className="h-3.5 w-3.5" />Organigrama</TabsTrigger>
           <TabsTrigger value="evaluaciones" className="gap-1.5"><ClipboardCheck className="h-3.5 w-3.5" />Evaluaciones</TabsTrigger>
+          <TabsTrigger value="diagnostico" className="gap-1.5"><BrainCircuit className="h-3.5 w-3.5" />Diagnóstico IA</TabsTrigger>
           <TabsTrigger value="expediente" className="gap-1.5"><FolderOpen className="h-3.5 w-3.5" />Expediente</TabsTrigger>
           <TabsTrigger value="capacitacion" className="gap-1.5"><GraduationCap className="h-3.5 w-3.5" />Capacitación</TabsTrigger>
         </TabsList>
@@ -289,40 +344,239 @@ export default function EmpresaDetail() {
           </Card>
         </TabsContent>
 
-        {/* Evaluaciones */}
+        {/* Evaluaciones with AI Action Plans */}
         <TabsContent value="evaluaciones" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {mockEvals.map((ev) => (
-              <Card key={ev.id} className="shadow-card hover:shadow-elevated transition-shadow">
-                <CardHeader className="pb-2">
-                  <div className="flex items-start justify-between">
-                    <CardTitle className="text-sm font-display">{ev.name}</CardTitle>
-                    <div className="flex gap-1.5">
-                      <Badge variant="outline" className={typeColors[ev.type] || ""}>{ev.type}</Badge>
-                      <Badge>Activa</Badge>
+          <div className="space-y-4">
+            {mockEvals.map((ev) => {
+              const plan = evalActionPlans[ev.id];
+              const isExpanded = expandedEval === ev.id;
+              return (
+                <Card key={ev.id} className="shadow-card hover:shadow-elevated transition-shadow">
+                  <CardHeader className="pb-2">
+                    <div className="flex items-start justify-between">
+                      <CardTitle className="text-sm font-display">{ev.name}</CardTitle>
+                      <div className="flex gap-1.5">
+                        <Badge variant="outline" className={typeColors[ev.type] || ""}>{ev.type}</Badge>
+                        <Badge>Activa</Badge>
+                      </div>
                     </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />Vence: {ev.end}</span>
-                    <span className="flex items-center gap-1"><Users className="h-3 w-3" />{ev.total} asignados</span>
-                  </div>
-                  <div className="space-y-1">
-                    <div className="flex justify-between text-xs">
-                      <span>Cobertura</span>
-                      <span className="font-medium">{Math.round((ev.respondents / ev.total) * 100)}%</span>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                      <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />Vence: {ev.end}</span>
+                      <span className="flex items-center gap-1"><Users className="h-3 w-3" />{ev.total} asignados</span>
                     </div>
-                    <Progress value={(ev.respondents / ev.total) * 100} className="h-1.5" />
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" className="h-7 text-xs gap-1 flex-1"><BarChart3 className="h-3 w-3" />Resultados</Button>
-                    <Button variant="outline" size="sm" className="h-7 text-xs gap-1 flex-1"><FileText className="h-3 w-3" />PDF</Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-xs">
+                        <span>Cobertura</span>
+                        <span className="font-medium">{Math.round((ev.respondents / ev.total) * 100)}%</span>
+                      </div>
+                      <Progress value={(ev.respondents / ev.total) * 100} className="h-1.5" />
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm" className="h-7 text-xs gap-1 flex-1"><BarChart3 className="h-3 w-3" />Resultados</Button>
+                      <Button variant="outline" size="sm" className="h-7 text-xs gap-1 flex-1"><FileText className="h-3 w-3" />PDF</Button>
+                      <Button
+                        size="sm"
+                        className="h-7 text-xs gap-1 flex-1 gradient-primary text-primary-foreground border-0"
+                        onClick={() => setExpandedEval(isExpanded ? null : ev.id)}
+                      >
+                        <Sparkles className="h-3 w-3" />
+                        Plan de Acción IA
+                        {isExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                      </Button>
+                    </div>
+
+                    {/* AI Action Plan expandable */}
+                    {isExpanded && plan && (
+                      <div className="mt-3 pt-3 border-t border-border space-y-4 animate-fade-in">
+                        {/* AI Insight */}
+                        <div className="rounded-lg bg-primary/5 border border-primary/10 p-4">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Sparkles className="h-4 w-4 text-primary" />
+                            <span className="text-xs font-semibold text-primary font-display">Análisis IA</span>
+                            <Badge variant="outline" className="text-[10px] bg-primary/5 border-primary/20 text-primary">Generado con IA</Badge>
+                          </div>
+                          <p className="text-sm text-foreground leading-relaxed">{plan.insight}</p>
+                        </div>
+
+                        {/* Action items */}
+                        <div>
+                          <h4 className="text-xs font-semibold font-display mb-2 flex items-center gap-1.5">
+                            <Lightbulb className="h-3.5 w-3.5 text-accent" />
+                            Plan de Acción — Servicios ESSEN
+                          </h4>
+                          <div className="space-y-2">
+                            {plan.actions.map((a, i) => (
+                              <div key={i} className="flex items-start gap-3 rounded-lg border border-border p-3 hover:bg-muted/30 transition-colors">
+                                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-bold shrink-0 mt-0.5">
+                                  {i + 1}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-medium">{a.action}</p>
+                                  <div className="flex items-center gap-2 mt-1 flex-wrap">
+                                    <Badge variant="secondary" className="text-[10px]">{a.service}</Badge>
+                                    <Badge variant="outline" className={priorityColor[a.priority] || ""}>{a.priority}</Badge>
+                                    <span className="text-[10px] text-muted-foreground">Impacto: {a.impact}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
+        </TabsContent>
+
+        {/* Diagnóstico Integral IA */}
+        <TabsContent value="diagnostico" className="space-y-6">
+          {/* Semáforo por área */}
+          <Card className="shadow-card">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base font-display flex items-center gap-2">
+                <ShieldAlert className="h-4 w-4 text-warning" />
+                Semáforo de Riesgo por Área
+              </CardTitle>
+              <p className="text-xs text-muted-foreground">Alertas tempranas para RH basadas en las evaluaciones aplicadas</p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {areaRisks.sort((a, b) => a.priority - b.priority).map((area) => {
+                  const rc = riskColor[area.risk];
+                  return (
+                    <div key={area.area} className="flex items-center gap-4 p-3 rounded-lg border border-border hover:bg-muted/30 transition-colors">
+                      {/* Semáforo */}
+                      <div className={`h-3 w-3 rounded-full shrink-0 ${rc.bg}`} />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-semibold">{area.area}</span>
+                            <Badge variant="outline" className={`text-[10px] ${rc.text}`}>{rc.label}</Badge>
+                          </div>
+                          <span className="text-sm font-bold font-display">{area.score}%</span>
+                        </div>
+                        <div className="flex items-center gap-1 mt-1">
+                          {area.issues.map((issue, i) => (
+                            <span key={i} className="text-[10px] text-muted-foreground">
+                              {i > 0 && " · "}{issue}
+                            </span>
+                          ))}
+                        </div>
+                        <Progress value={area.score} className="h-1 mt-1.5" />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Top riesgos y prioridades */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="shadow-card border-l-4 border-l-destructive">
+              <CardContent className="pt-5">
+                <div className="flex items-center gap-2 mb-2">
+                  <AlertCircle className="h-4 w-4 text-destructive" />
+                  <span className="text-xs font-semibold text-destructive">Prioridad #1</span>
+                </div>
+                <p className="text-sm font-semibold">Rotación en Ventas</p>
+                <p className="text-xs text-muted-foreground mt-1">23% anual — Acción: Revisar esquema de compensación variable</p>
+                <div className="mt-2 flex items-center gap-1">
+                  <TrendingUp className="h-3 w-3 text-success" />
+                  <span className="text-[10px] text-success font-medium">Mayor retorno esperado</span>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="shadow-card border-l-4 border-l-warning">
+              <CardContent className="pt-5">
+                <div className="flex items-center gap-2 mb-2">
+                  <Clock className="h-4 w-4 text-warning" />
+                  <span className="text-xs font-semibold text-warning">Prioridad #2</span>
+                </div>
+                <p className="text-sm font-semibold">Sobrecarga en Operaciones</p>
+                <p className="text-xs text-muted-foreground mt-1">Cargas excesivas en centros Monterrey y Guadalajara</p>
+                <div className="mt-2 flex items-center gap-1">
+                  <TrendingUp className="h-3 w-3 text-muted-foreground" />
+                  <span className="text-[10px] text-muted-foreground font-medium">Retorno medio</span>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="shadow-card border-l-4 border-l-info">
+              <CardContent className="pt-5">
+                <div className="flex items-center gap-2 mb-2">
+                  <Lightbulb className="h-4 w-4 text-info" />
+                  <span className="text-xs font-semibold text-info">Prioridad #3</span>
+                </div>
+                <p className="text-sm font-semibold">Burnout en IT</p>
+                <p className="text-xs text-muted-foreground mt-1">Señales tempranas — Intervención preventiva recomendada</p>
+                <div className="mt-2 flex items-center gap-1">
+                  <TrendingUp className="h-3 w-3 text-muted-foreground" />
+                  <span className="text-[10px] text-muted-foreground font-medium">Retorno preventivo</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* AI Insight editable */}
+          <Card className="shadow-card">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base font-display flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-primary" />
+                  Interpretación e Insights — {empresa.name}
+                </CardTitle>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="text-[10px] bg-primary/5 border-primary/20 text-primary gap-1">
+                    <BrainCircuit className="h-3 w-3" />
+                    Diagnóstico generado con IA
+                  </Badge>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-7 text-xs gap-1"
+                    onClick={() => {
+                      if (isEditingDiagnostico) {
+                        setIsEditingDiagnostico(false);
+                      } else {
+                        setIsEditingDiagnostico(true);
+                      }
+                    }}
+                  >
+                    {isEditingDiagnostico ? (
+                      <><Save className="h-3 w-3" />Guardar</>
+                    ) : (
+                      <><Pencil className="h-3 w-3" />Editar</>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {isEditingDiagnostico ? (
+                <Textarea
+                  value={diagnosticoInsight}
+                  onChange={(e) => setDiagnosticoInsight(e.target.value)}
+                  className="min-h-[300px] font-mono text-sm bg-secondary border-0"
+                />
+              ) : (
+                <div className="prose prose-sm max-w-none text-foreground">
+                  {diagnosticoInsight.split("\n").map((line, i) => {
+                    if (line.startsWith("## ")) return <h2 key={i} className="text-lg font-bold font-display mt-4 mb-2">{line.replace("## ", "")}</h2>;
+                    if (line.startsWith("### ")) return <h3 key={i} className="text-sm font-bold font-display mt-3 mb-1">{line.replace("### ", "")}</h3>;
+                    if (line.startsWith("- ")) return <li key={i} className="text-sm text-foreground ml-4 mb-1">{renderBold(line.replace("- ", ""))}</li>;
+                    if (line.match(/^\d+\. /)) return <li key={i} className="text-sm text-foreground ml-4 mb-1 list-decimal">{renderBold(line.replace(/^\d+\. /, ""))}</li>;
+                    if (line.trim() === "") return <br key={i} />;
+                    return <p key={i} className="text-sm text-foreground mb-1">{renderBold(line)}</p>;
+                  })}
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Expediente */}
@@ -394,5 +648,13 @@ export default function EmpresaDetail() {
         </TabsContent>
       </Tabs>
     </div>
+  );
+}
+
+// Simple bold text renderer for **text**
+function renderBold(text: string) {
+  const parts = text.split(/\*\*(.*?)\*\*/g);
+  return parts.map((part, i) =>
+    i % 2 === 1 ? <strong key={i} className="font-semibold">{part}</strong> : part
   );
 }
