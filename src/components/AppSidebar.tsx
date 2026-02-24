@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import EssenLogo from "./EssenLogo";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/" },
@@ -41,13 +42,16 @@ export default function AppSidebar() {
     >
       {/* Logo */}
       <div className="flex items-center gap-3 px-5 py-6">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg gradient-primary">
-          <span className="text-sm font-bold text-primary-foreground">E</span>
-        </div>
+        <EssenLogo size={36} />
         {!collapsed && (
-          <span className="text-display text-lg font-bold text-sidebar-foreground tracking-tight">
-            ESSEN
-          </span>
+          <div className="flex flex-col">
+            <span className="text-display text-lg font-extrabold text-sidebar-foreground tracking-tight leading-none">
+              Essen
+            </span>
+            <span className="text-[9px] font-semibold tracking-[0.15em] text-sidebar-muted uppercase leading-none mt-0.5">
+              Wellbeing Corporativo
+            </span>
+          </div>
         )}
       </div>
 

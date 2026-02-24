@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,102 +6,104 @@
 
 @layer base {
   :root {
+    /* ESSEN Brand: #763df2, #38dcab, #162944, #ffd41d, #0468bf */
     --background: 210 20% 98%;
-    --foreground: 210 40% 11%;
+    --foreground: 215 50% 18%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 40% 11%;
+    --card-foreground: 215 50% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 40% 11%;
+    --popover-foreground: 215 50% 18%;
 
-    --primary: 173 58% 30%;
+    --primary: 260 87% 59%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 20% 95%;
-    --secondary-foreground: 210 40% 11%;
+    --secondary: 161 50% 94%;
+    --secondary-foreground: 215 50% 18%;
 
-    --muted: 210 15% 93%;
-    --muted-foreground: 210 10% 46%;
+    --muted: 215 15% 93%;
+    --muted-foreground: 215 15% 46%;
 
-    --accent: 38 92% 50%;
+    --accent: 161 66% 54%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 152 60% 40%;
+    --success: 161 66% 54%;
     --success-foreground: 0 0% 100%;
 
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 100%;
+    --warning: 48 100% 56%;
+    --warning-foreground: 215 50% 18%;
 
-    --info: 210 80% 52%;
+    --info: 210 96% 38%;
     --info-foreground: 0 0% 100%;
 
-    --border: 214 20% 90%;
-    --input: 214 20% 90%;
-    --ring: 173 58% 30%;
+    --border: 215 20% 90%;
+    --input: 215 20% 90%;
+    --ring: 260 87% 59%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 210 40% 11%;
-    --sidebar-foreground: 210 15% 85%;
-    --sidebar-primary: 173 58% 45%;
+    --sidebar-background: 215 50% 18%;
+    --sidebar-foreground: 215 15% 85%;
+    --sidebar-primary: 260 87% 65%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 30% 18%;
-    --sidebar-accent-foreground: 210 15% 85%;
-    --sidebar-border: 210 30% 18%;
-    --sidebar-ring: 173 58% 45%;
-    --sidebar-muted: 210 15% 55%;
+    --sidebar-accent: 215 40% 24%;
+    --sidebar-accent-foreground: 215 15% 85%;
+    --sidebar-border: 215 40% 24%;
+    --sidebar-ring: 260 87% 59%;
+    --sidebar-muted: 215 15% 55%;
 
-    --chart-1: 173 58% 30%;
-    --chart-2: 38 92% 50%;
-    --chart-3: 210 80% 52%;
-    --chart-4: 152 60% 40%;
+    --chart-1: 260 87% 59%;
+    --chart-2: 161 66% 54%;
+    --chart-3: 210 96% 38%;
+    --chart-4: 48 100% 56%;
     --chart-5: 0 72% 51%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(173 58% 30%), hsl(173 58% 42%));
-    --gradient-accent: linear-gradient(135deg, hsl(38 92% 50%), hsl(38 92% 60%));
-    --gradient-sidebar: linear-gradient(180deg, hsl(210 40% 11%), hsl(210 40% 8%));
+    --gradient-primary: linear-gradient(135deg, hsl(260 87% 59%), hsl(161 66% 54%));
+    --gradient-accent: linear-gradient(135deg, hsl(161 66% 54%), hsl(210 96% 38%));
+    --gradient-brand: linear-gradient(135deg, hsl(260 87% 59%), hsl(210 96% 38%), hsl(161 66% 54%), hsl(48 100% 56%));
+    --gradient-sidebar: linear-gradient(180deg, hsl(215 50% 18%), hsl(215 50% 14%));
 
-    --shadow-sm: 0 1px 2px 0 hsl(210 40% 11% / 0.04);
-    --shadow-md: 0 4px 6px -1px hsl(210 40% 11% / 0.06), 0 2px 4px -2px hsl(210 40% 11% / 0.06);
-    --shadow-lg: 0 10px 15px -3px hsl(210 40% 11% / 0.08), 0 4px 6px -4px hsl(210 40% 11% / 0.06);
-    --shadow-card: 0 1px 3px hsl(210 40% 11% / 0.05), 0 1px 2px hsl(210 40% 11% / 0.03);
+    --shadow-sm: 0 1px 2px 0 hsl(215 50% 18% / 0.04);
+    --shadow-md: 0 4px 6px -1px hsl(215 50% 18% / 0.06), 0 2px 4px -2px hsl(215 50% 18% / 0.06);
+    --shadow-lg: 0 10px 15px -3px hsl(215 50% 18% / 0.08), 0 4px 6px -4px hsl(215 50% 18% / 0.06);
+    --shadow-card: 0 1px 3px hsl(215 50% 18% / 0.05), 0 1px 2px hsl(215 50% 18% / 0.03);
 
-    --font-display: 'Plus Jakarta Sans', sans-serif;
-    --font-body: 'Inter', sans-serif;
+    --font-display: 'Nunito Sans', sans-serif;
+    --font-body: 'Nunito Sans', sans-serif;
   }
 
   .dark {
-    --background: 210 40% 6%;
-    --foreground: 210 15% 93%;
-    --card: 210 40% 9%;
-    --card-foreground: 210 15% 93%;
-    --popover: 210 40% 9%;
-    --popover-foreground: 210 15% 93%;
-    --primary: 173 58% 45%;
+    --background: 215 50% 6%;
+    --foreground: 215 15% 93%;
+    --card: 215 50% 9%;
+    --card-foreground: 215 15% 93%;
+    --popover: 215 50% 9%;
+    --popover-foreground: 215 15% 93%;
+    --primary: 260 87% 65%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 210 30% 15%;
-    --secondary-foreground: 210 15% 93%;
-    --muted: 210 30% 15%;
-    --muted-foreground: 210 15% 55%;
-    --accent: 38 92% 50%;
+    --secondary: 215 30% 15%;
+    --secondary-foreground: 215 15% 93%;
+    --muted: 215 30% 15%;
+    --muted-foreground: 215 15% 55%;
+    --accent: 161 66% 54%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 210 30% 18%;
-    --input: 210 30% 18%;
-    --ring: 173 58% 45%;
-    --sidebar-background: 210 40% 5%;
-    --sidebar-foreground: 210 15% 85%;
-    --sidebar-primary: 173 58% 45%;
+    --destructive-foreground: 215 40% 98%;
+    --border: 215 30% 18%;
+    --input: 215 30% 18%;
+    --ring: 260 87% 65%;
+    --sidebar-background: 215 50% 5%;
+    --sidebar-foreground: 215 15% 85%;
+    --sidebar-primary: 260 87% 65%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 30% 12%;
-    --sidebar-accent-foreground: 210 15% 85%;
-    --sidebar-border: 210 30% 12%;
-    --sidebar-ring: 173 58% 45%;
+    --sidebar-accent: 215 30% 12%;
+    --sidebar-accent-foreground: 215 15% 85%;
+    --sidebar-border: 215 30% 12%;
+    --sidebar-ring: 260 87% 65%;
   }
 }
 
@@ -131,6 +133,10 @@
 
   .gradient-accent {
     background: var(--gradient-accent);
+  }
+
+  .gradient-brand {
+    background: var(--gradient-brand);
   }
 
   .shadow-card {
