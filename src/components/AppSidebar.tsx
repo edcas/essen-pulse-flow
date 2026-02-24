@@ -1,28 +1,26 @@
 import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
-  FolderOpen,
-  Network,
+  Building2,
   Bell,
   ClipboardCheck,
   GraduationCap,
   Settings,
   ChevronLeft,
-  Users,
   RefreshCw,
+  BarChart3,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/" },
-  { icon: FolderOpen, label: "Expediente Digital", path: "/expediente" },
+  { icon: Building2, label: "Empresas", path: "/empresas" },
   { icon: ClipboardCheck, label: "Evaluaciones", path: "/evaluaciones" },
-  { icon: Network, label: "Organigrama", path: "/organigrama" },
-  { icon: Bell, label: "Avisos", path: "/avisos" },
   { icon: GraduationCap, label: "Capacitación", path: "/capacitacion" },
+  { icon: Bell, label: "Avisos", path: "/avisos" },
   { icon: RefreshCw, label: "Sincronización", path: "/sincronizacion" },
-  { icon: Users, label: "Empleados", path: "/empleados" },
+  { icon: BarChart3, label: "Reportes", path: "/reportes" },
 ];
 
 const bottomItems = [
@@ -56,7 +54,7 @@ export default function AppSidebar() {
       {/* Nav */}
       <nav className="flex-1 space-y-1 px-3 overflow-y-auto">
         {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
+          const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + "/");
           return (
             <Link
               key={item.path}
