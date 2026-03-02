@@ -1,5 +1,5 @@
 import StatCard from "@/components/StatCard";
-import { Building2, Users, ClipboardCheck, GraduationCap, TrendingUp, AlertTriangle, CheckCircle2, Clock, BarChart3, FolderOpen } from "lucide-react";
+import { Building2, Users, ClipboardCheck, GraduationCap, TrendingUp, BarChart3, FolderOpen } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
@@ -40,7 +40,7 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Companies overview */}
-        <Card className="lg:col-span-2 shadow-card">
+        <Card className="lg:col-span-3 shadow-card">
           <CardHeader className="pb-3">
             <CardTitle className="text-base font-display flex items-center gap-2">
               <Building2 className="h-4 w-4 text-primary" />
@@ -74,45 +74,6 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Alerts */}
-        <Card className="shadow-card">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base font-display flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-warning" />
-              Alertas
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex items-start gap-3 rounded-lg bg-destructive/5 p-3">
-              <AlertTriangle className="h-4 w-4 text-destructive mt-0.5 shrink-0" />
-              <div>
-                <p className="text-sm font-medium">ConstruMex — expediente bajo</p>
-                <p className="text-xs text-muted-foreground">Solo 55% de documentos completos</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 rounded-lg bg-warning/5 p-3">
-              <Clock className="h-4 w-4 text-warning mt-0.5 shrink-0" />
-              <div>
-                <p className="text-sm font-medium">NOM-035 TechMex vence en 5 días</p>
-                <p className="text-xs text-muted-foreground">84 de 200 han contestado</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 rounded-lg bg-muted p-3">
-              <AlertTriangle className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
-              <div>
-                <p className="text-sm font-medium">FarmaVida — cuenta inactiva</p>
-                <p className="text-xs text-muted-foreground">Sin actividad desde hace 30 días</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 rounded-lg bg-success/5 p-3">
-              <CheckCircle2 className="h-4 w-4 text-success mt-0.5 shrink-0" />
-              <div>
-                <p className="text-sm font-medium">Sincronización BeePayroll OK</p>
-                <p className="text-xs text-muted-foreground">Todas las empresas sincronizadas</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
       {/* Servicios activos por empresa */}
