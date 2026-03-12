@@ -342,6 +342,8 @@ export default function EmpresaDetail() {
           <TabsTrigger value="diagnostico" className="gap-1.5"><BrainCircuit className="h-3.5 w-3.5" />Diagnóstico IA</TabsTrigger>
           <TabsTrigger value="expediente" className="gap-1.5"><FolderOpen className="h-3.5 w-3.5" />Expediente</TabsTrigger>
           <TabsTrigger value="capacitacion" className="gap-1.5"><GraduationCap className="h-3.5 w-3.5" />Capacitación</TabsTrigger>
+          <TabsTrigger value="reloj-checador" className="gap-1.5"><Timer className="h-3.5 w-3.5" />Reloj Checador</TabsTrigger>
+          <TabsTrigger value="incidencias" className="gap-1.5"><FileWarning className="h-3.5 w-3.5" />Incidencias</TabsTrigger>
         </TabsList>
 
         {/* Empleados */}
