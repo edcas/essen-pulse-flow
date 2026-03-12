@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Users, Smartphone, QrCode, Fingerprint, ScanFace } from "lucide-react";
+import { Users, Smartphone, Fingerprint } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Employee, Office } from "@/types/check-methods";
 import { AssignMethodsPanel } from "./AssignMethodsPanel";
@@ -18,9 +18,9 @@ export const CheckMethodsTable = () => {
   const [showAssignModal, setShowAssignModal] = useState(false);
 
   const [employees, setEmployees] = useState<Employee[]>([
-    { id: "1", name: "Juan Pérez", area: "Producción", department: "Operaciones", position: "Operador", costCenter: "CC-001", assignedOffice: "Planta Norte", checkMethods: { app: true, qr: true, biometric: false, facial: false } },
-    { id: "2", name: "María González", area: "Administración", department: "Recursos Humanos", position: "Gerente", costCenter: "CC-002", assignedOffice: "Oficina Central", checkMethods: { app: true, qr: false, biometric: true, facial: false } },
-    { id: "3", name: "Carlos Rodríguez", area: "Ventas", department: "Comercial", position: "Vendedor", costCenter: "CC-003", assignedOffice: "Sucursal Sur", checkMethods: { app: true, qr: true, biometric: false, facial: true } },
+    { id: "1", name: "Juan Pérez", area: "Producción", department: "Operaciones", position: "Operador", costCenter: "CC-001", assignedOffice: "Planta Norte", checkMethods: { app: true, biometric: false } },
+    { id: "2", name: "María González", area: "Administración", department: "Recursos Humanos", position: "Gerente", costCenter: "CC-002", assignedOffice: "Oficina Central", checkMethods: { app: true, biometric: true } },
+    { id: "3", name: "Carlos Rodríguez", area: "Ventas", department: "Comercial", position: "Vendedor", costCenter: "CC-003", assignedOffice: "Sucursal Sur", checkMethods: { app: true, biometric: false } },
   ]);
 
   const offices: Office[] = [
@@ -108,10 +108,8 @@ export const CheckMethodsTable = () => {
                           <button onClick={() => handleOpenEditModal(employee)} className="flex flex-wrap items-center gap-2 p-2 rounded-lg hover:bg-accent/10 transition-colors">
                             <TooltipProvider>
                               {employee.checkMethods.app && (<Tooltip><TooltipTrigger asChild><div className="flex items-center gap-1 text-primary"><Smartphone className="h-4 w-4" /><span className="text-xs">App/GPS</span></div></TooltipTrigger><TooltipContent><p>App / Geolocalización</p></TooltipContent></Tooltip>)}
-                              {employee.checkMethods.qr && (<Tooltip><TooltipTrigger asChild><div className="flex items-center gap-1 text-primary"><QrCode className="h-4 w-4" /><span className="text-xs">QR</span></div></TooltipTrigger><TooltipContent><p>Código QR</p></TooltipContent></Tooltip>)}
                               {employee.checkMethods.biometric && (<Tooltip><TooltipTrigger asChild><div className="flex items-center gap-1 text-primary"><Fingerprint className="h-4 w-4" /><span className="text-xs">Biométrico</span></div></TooltipTrigger><TooltipContent><p>Biométrico / Hardware</p></TooltipContent></Tooltip>)}
-                              {employee.checkMethods.facial && (<Tooltip><TooltipTrigger asChild><div className="flex items-center gap-1 text-primary"><ScanFace className="h-4 w-4" /><span className="text-xs">Facial</span></div></TooltipTrigger><TooltipContent><p>Reconocimiento Facial (App)</p></TooltipContent></Tooltip>)}
-                              {!employee.checkMethods.app && !employee.checkMethods.qr && !employee.checkMethods.biometric && !employee.checkMethods.facial && (<span className="text-sm text-muted-foreground">Sin métodos asignados</span>)}
+                              {!employee.checkMethods.app && !employee.checkMethods.biometric && (<span className="text-sm text-muted-foreground">Sin métodos asignados</span>)}
                             </TooltipProvider>
                           </button>
                         </TableCell>
