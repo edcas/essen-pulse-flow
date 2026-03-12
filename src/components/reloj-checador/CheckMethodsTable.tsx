@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Users, Smartphone, QrCode, Fingerprint, ScanFace } from "lucide-react";
+import { Users, Smartphone, Fingerprint } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Employee, Office } from "@/types/check-methods";
 import { AssignMethodsPanel } from "./AssignMethodsPanel";
