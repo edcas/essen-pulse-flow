@@ -18,9 +18,9 @@ export const CheckMethodsTable = () => {
   const [showAssignModal, setShowAssignModal] = useState(false);
 
   const [employees, setEmployees] = useState<Employee[]>([
-    { id: "1", name: "Juan Pérez", area: "Producción", department: "Operaciones", position: "Operador", costCenter: "CC-001", assignedOffice: "Planta Norte", checkMethods: { app: true, qr: true, biometric: false, facial: false } },
-    { id: "2", name: "María González", area: "Administración", department: "Recursos Humanos", position: "Gerente", costCenter: "CC-002", assignedOffice: "Oficina Central", checkMethods: { app: true, qr: false, biometric: true, facial: false } },
-    { id: "3", name: "Carlos Rodríguez", area: "Ventas", department: "Comercial", position: "Vendedor", costCenter: "CC-003", assignedOffice: "Sucursal Sur", checkMethods: { app: true, qr: true, biometric: false, facial: true } },
+    { id: "1", name: "Juan Pérez", area: "Producción", department: "Operaciones", position: "Operador", costCenter: "CC-001", assignedOffice: "Planta Norte", checkMethods: { app: true, biometric: false } },
+    { id: "2", name: "María González", area: "Administración", department: "Recursos Humanos", position: "Gerente", costCenter: "CC-002", assignedOffice: "Oficina Central", checkMethods: { app: true, biometric: true } },
+    { id: "3", name: "Carlos Rodríguez", area: "Ventas", department: "Comercial", position: "Vendedor", costCenter: "CC-003", assignedOffice: "Sucursal Sur", checkMethods: { app: true, biometric: false } },
   ]);
 
   const offices: Office[] = [
