@@ -32,7 +32,7 @@ export const AssignMethodsPanel = ({ onAssign, onClose, selectedCount, offices, 
   const canUseHardware = (selectedOffice?.allowHardware && selectedOffice?.hasDevices) ?? false;
 
   const handleSubmit = () => {
-    if (selectedOfficeId) { onAssign(selectedOfficeId, methods); setSelectedOfficeId(""); setMethods({ app: false, qr: false, biometric: false, facial: false }); }
+    if (selectedOfficeId) { onAssign(selectedOfficeId, methods); setSelectedOfficeId(""); setMethods({ app: false, biometric: false }); }
   };
 
   return (
