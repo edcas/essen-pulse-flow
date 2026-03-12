@@ -108,10 +108,8 @@ export const CheckMethodsTable = () => {
                           <button onClick={() => handleOpenEditModal(employee)} className="flex flex-wrap items-center gap-2 p-2 rounded-lg hover:bg-accent/10 transition-colors">
                             <TooltipProvider>
                               {employee.checkMethods.app && (<Tooltip><TooltipTrigger asChild><div className="flex items-center gap-1 text-primary"><Smartphone className="h-4 w-4" /><span className="text-xs">App/GPS</span></div></TooltipTrigger><TooltipContent><p>App / Geolocalización</p></TooltipContent></Tooltip>)}
-                              {employee.checkMethods.qr && (<Tooltip><TooltipTrigger asChild><div className="flex items-center gap-1 text-primary"><QrCode className="h-4 w-4" /><span className="text-xs">QR</span></div></TooltipTrigger><TooltipContent><p>Código QR</p></TooltipContent></Tooltip>)}
                               {employee.checkMethods.biometric && (<Tooltip><TooltipTrigger asChild><div className="flex items-center gap-1 text-primary"><Fingerprint className="h-4 w-4" /><span className="text-xs">Biométrico</span></div></TooltipTrigger><TooltipContent><p>Biométrico / Hardware</p></TooltipContent></Tooltip>)}
-                              {employee.checkMethods.facial && (<Tooltip><TooltipTrigger asChild><div className="flex items-center gap-1 text-primary"><ScanFace className="h-4 w-4" /><span className="text-xs">Facial</span></div></TooltipTrigger><TooltipContent><p>Reconocimiento Facial (App)</p></TooltipContent></Tooltip>)}
-                              {!employee.checkMethods.app && !employee.checkMethods.qr && !employee.checkMethods.biometric && !employee.checkMethods.facial && (<span className="text-sm text-muted-foreground">Sin métodos asignados</span>)}
+                              {!employee.checkMethods.app && !employee.checkMethods.biometric && (<span className="text-sm text-muted-foreground">Sin métodos asignados</span>)}
                             </TooltipProvider>
                           </button>
                         </TableCell>
