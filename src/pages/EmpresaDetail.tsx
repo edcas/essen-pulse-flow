@@ -15,8 +15,19 @@ import {
   ArrowLeft, Users, MapPin, ClipboardCheck, FolderOpen, Network, GraduationCap,
   Search, Download, Building2, CheckCircle2, Clock, AlertCircle, Calendar, BarChart3, FileText,
   BrainCircuit, Sparkles, Pencil, Save, ShieldAlert, TrendingUp, Lightbulb, ChevronDown, ChevronUp,
-  Mail, Phone, Briefcase
+  Mail, Phone, Briefcase, Timer, FileWarning
 } from "lucide-react";
+import { CheckMethodsTable } from "@/components/reloj-checador/CheckMethodsTable";
+import { DeviceTable } from "@/components/reloj-checador/DeviceTable";
+import { OfficeLocationsTable } from "@/components/reloj-checador/OfficeLocationsTable";
+import { IncidenceLibrary } from "@/components/incidence/IncidenceLibrary";
+import { ApprovalFlowLibrary } from "@/components/approval/ApprovalFlowLibrary";
+import { HolidayCalendarView } from "@/components/holiday/HolidayCalendarView";
+import { Device } from "@/types/device";
+import { IncidenceConfig, defaultIncidences } from "@/types/incidence";
+import { ApprovalFlow, defaultApprovalFlows } from "@/types/approval-flow";
+import { Holiday, defaultHolidays } from "@/types/holiday";
+import { useToast } from "@/hooks/use-toast";
 
 const deptColor: Record<string, string> = {
   Ventas: "bg-info/10 text-info border-info/20",
