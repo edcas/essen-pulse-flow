@@ -24,7 +24,7 @@ export const AssignMethodsPanel = ({ onAssign, onClose, selectedCount, offices, 
 
   useEffect(() => {
     if (selectedOffice && !initialMethods) {
-      setMethods({ app: selectedOffice.allowMobileApp, qr: selectedOffice.allowMobileApp, biometric: selectedOffice.allowHardware && selectedOffice.hasDevices, facial: selectedOffice.allowMobileApp });
+      setMethods({ app: selectedOffice.allowMobileApp, biometric: selectedOffice.allowHardware && selectedOffice.hasDevices });
     }
   }, [selectedOfficeId, selectedOffice, initialMethods]);
 

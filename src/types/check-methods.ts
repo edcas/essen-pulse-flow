@@ -1,8 +1,6 @@
 export interface CheckMethod {
   app: boolean;
-  qr: boolean;
   biometric: boolean;
-  facial: boolean;
 }
 
 export interface Employee {
