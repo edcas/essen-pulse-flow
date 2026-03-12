@@ -26,8 +26,6 @@ const clientViewItems = [
   { icon: Network, label: "Organigrama", path: "/cliente/organigrama" },
   { icon: FolderOpen, label: "Expediente", path: "/cliente/expediente" },
   { icon: GraduationCap, label: "Capacitación", path: "/cliente/capacitacion" },
-  { icon: Timer, label: "Reloj Checador", path: "/cliente/reloj-checador" },
-  { icon: FileWarning, label: "Incidencias", path: "/cliente/incidencias" },
 ];
 
 const bottomItems = [
