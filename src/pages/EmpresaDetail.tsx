@@ -732,6 +732,56 @@ export default function EmpresaDetail() {
             </CardContent>
           </Card>
         </TabsContent>
+
+        {/* Reloj Checador */}
+        <TabsContent value="reloj-checador">
+          <Tabs defaultValue="metodos" className="space-y-4">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="metodos">Asignar oficinas</TabsTrigger>
+              <TabsTrigger value="ubicaciones">Oficinas ubicaciones</TabsTrigger>
+              <TabsTrigger value="dispositivos">Dispositivos</TabsTrigger>
+            </TabsList>
+            <TabsContent value="metodos"><CheckMethodsTable /></TabsContent>
+            <TabsContent value="ubicaciones"><OfficeLocationsTable devices={devices} /></TabsContent>
+            <TabsContent value="dispositivos"><DeviceTable /></TabsContent>
+          </Tabs>
+        </TabsContent>
+
+        {/* Incidencias */}
+        <TabsContent value="incidencias">
+          <Tabs defaultValue="incidencias-lib" className="space-y-4">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="incidencias-lib">Incidencias</TabsTrigger>
+              <TabsTrigger value="flujo">Flujo de aprobación</TabsTrigger>
+              <TabsTrigger value="festivos">Días festivos</TabsTrigger>
+            </TabsList>
+            <TabsContent value="incidencias-lib">
+              <IncidenceLibrary
+                incidences={incidences}
+                onToggle={(id, active) => { setIncidences(incidences.map(inc => inc.id === id ? { ...inc, activo: active } : inc)); toast({ title: active ? "Incidencia activada" : "Incidencia desactivada" }); }}
+                onCreate={() => {}}
+                onEdit={(updated) => { const exists = incidences.some(inc => inc.id === updated.id); if (exists) { setIncidences(incidences.map(inc => inc.id === updated.id ? updated : inc)); } else { setIncidences([...incidences, updated]); } toast({ title: "Configuración guardada" }); }}
+                onDelete={(id) => { setIncidences(incidences.filter(inc => inc.id !== id)); toast({ title: "Incidencia eliminada", variant: "destructive" }); }}
+              />
+            </TabsContent>
+            <TabsContent value="flujo">
+              <ApprovalFlowLibrary
+                flows={approvalFlows}
+                incidences={incidences}
+                onSave={(flow) => { const exists = approvalFlows.some(f => f.id === flow.id); if (exists) { setApprovalFlows(approvalFlows.map(f => f.id === flow.id ? flow : f)); } else { setApprovalFlows([...approvalFlows, flow]); } toast({ title: exists ? "Flujo actualizado" : "Flujo creado" }); }}
+                onDelete={(id) => { setApprovalFlows(approvalFlows.filter(f => f.id !== id)); toast({ title: "Flujo eliminado", variant: "destructive" }); }}
+              />
+            </TabsContent>
+            <TabsContent value="festivos">
+              <HolidayCalendarView
+                holidays={holidays}
+                onAddHoliday={(date, name, desc) => { setHolidays(prev => [...prev, { id: `holiday-${Date.now()}`, date, name, description: desc, createdAt: new Date(), updatedAt: new Date() }]); toast({ title: "Día festivo agregado" }); }}
+                onUpdateHoliday={(date, name, desc) => { setHolidays(prev => prev.map(h => h.date.getDate() === date.getDate() && h.date.getMonth() === date.getMonth() && h.date.getFullYear() === date.getFullYear() ? { ...h, name, description: desc, updatedAt: new Date() } : h)); toast({ title: "Día festivo actualizado" }); }}
+                onDeleteHoliday={(date) => { setHolidays(prev => prev.filter(h => !(h.date.getDate() === date.getDate() && h.date.getMonth() === date.getMonth() && h.date.getFullYear() === date.getFullYear()))); toast({ title: "Día festivo eliminado" }); }}
+              />
+            </TabsContent>
+          </Tabs>
+        </TabsContent>
       </Tabs>
     </div>
   );
