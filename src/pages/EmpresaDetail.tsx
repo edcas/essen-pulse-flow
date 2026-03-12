@@ -15,8 +15,19 @@ import {
   ArrowLeft, Users, MapPin, ClipboardCheck, FolderOpen, Network, GraduationCap,
   Search, Download, Building2, CheckCircle2, Clock, AlertCircle, Calendar, BarChart3, FileText,
   BrainCircuit, Sparkles, Pencil, Save, ShieldAlert, TrendingUp, Lightbulb, ChevronDown, ChevronUp,
-  Mail, Phone, Briefcase
+  Mail, Phone, Briefcase, Timer, FileWarning
 } from "lucide-react";
+import { CheckMethodsTable } from "@/components/reloj-checador/CheckMethodsTable";
+import { DeviceTable } from "@/components/reloj-checador/DeviceTable";
+import { OfficeLocationsTable } from "@/components/reloj-checador/OfficeLocationsTable";
+import { IncidenceLibrary } from "@/components/incidence/IncidenceLibrary";
+import { ApprovalFlowLibrary } from "@/components/approval/ApprovalFlowLibrary";
+import { HolidayCalendarView } from "@/components/holiday/HolidayCalendarView";
+import { Device } from "@/types/device";
+import { IncidenceConfig, defaultIncidences } from "@/types/incidence";
+import { ApprovalFlow, defaultApprovalFlows } from "@/types/approval-flow";
+import { Holiday, defaultHolidays } from "@/types/holiday";
+import { useToast } from "@/hooks/use-toast";
 
 const deptColor: Record<string, string> = {
   Ventas: "bg-info/10 text-info border-info/20",
@@ -233,6 +244,18 @@ export default function EmpresaDetail() {
   const [diagnosticoInsight, setDiagnosticoInsight] = useState(defaultDiagnosticoInsight);
   const [isEditingDiagnostico, setIsEditingDiagnostico] = useState(false);
   const [expandedEval, setExpandedEval] = useState<number | null>(null);
+  const { toast } = useToast();
+
+  // Reloj Checador state
+  const [devices] = useState<Device[]>([
+    { id: "1", name: "Reloj Comedor", serialNumber: "SN-123456", model: "ZKTeco MB460", assignedLocation: "Oficina Central", status: "online" },
+    { id: "2", name: "Reloj Recepción", serialNumber: "SN-789012", model: "ZKTeco MB460", status: "unverified" },
+  ]);
+
+  // Incidencias state
+  const [incidences, setIncidences] = useState<IncidenceConfig[]>(defaultIncidences);
+  const [approvalFlows, setApprovalFlows] = useState<ApprovalFlow[]>(defaultApprovalFlows);
+  const [holidays, setHolidays] = useState<Holiday[]>(defaultHolidays);
 
   if (!empresa) {
     return (
@@ -319,6 +342,8 @@ export default function EmpresaDetail() {
           <TabsTrigger value="diagnostico" className="gap-1.5"><BrainCircuit className="h-3.5 w-3.5" />Diagnóstico IA</TabsTrigger>
           <TabsTrigger value="expediente" className="gap-1.5"><FolderOpen className="h-3.5 w-3.5" />Expediente</TabsTrigger>
           <TabsTrigger value="capacitacion" className="gap-1.5"><GraduationCap className="h-3.5 w-3.5" />Capacitación</TabsTrigger>
+          <TabsTrigger value="reloj-checador" className="gap-1.5"><Timer className="h-3.5 w-3.5" />Reloj Checador</TabsTrigger>
+          <TabsTrigger value="incidencias" className="gap-1.5"><FileWarning className="h-3.5 w-3.5" />Incidencias</TabsTrigger>
         </TabsList>
 
         {/* Empleados */}
@@ -706,6 +731,56 @@ export default function EmpresaDetail() {
               })}
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Reloj Checador */}
+        <TabsContent value="reloj-checador">
+          <Tabs defaultValue="metodos" className="space-y-4">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="metodos">Asignar oficinas</TabsTrigger>
+              <TabsTrigger value="ubicaciones">Oficinas ubicaciones</TabsTrigger>
+              <TabsTrigger value="dispositivos">Dispositivos</TabsTrigger>
+            </TabsList>
+            <TabsContent value="metodos"><CheckMethodsTable /></TabsContent>
+            <TabsContent value="ubicaciones"><OfficeLocationsTable devices={devices} /></TabsContent>
+            <TabsContent value="dispositivos"><DeviceTable /></TabsContent>
+          </Tabs>
+        </TabsContent>
+
+        {/* Incidencias */}
+        <TabsContent value="incidencias">
+          <Tabs defaultValue="incidencias-lib" className="space-y-4">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="incidencias-lib">Incidencias</TabsTrigger>
+              <TabsTrigger value="flujo">Flujo de aprobación</TabsTrigger>
+              <TabsTrigger value="festivos">Días festivos</TabsTrigger>
+            </TabsList>
+            <TabsContent value="incidencias-lib">
+              <IncidenceLibrary
+                incidences={incidences}
+                onToggle={(id, active) => { setIncidences(incidences.map(inc => inc.id === id ? { ...inc, activo: active } : inc)); toast({ title: active ? "Incidencia activada" : "Incidencia desactivada" }); }}
+                onCreate={() => {}}
+                onEdit={(updated) => { const exists = incidences.some(inc => inc.id === updated.id); if (exists) { setIncidences(incidences.map(inc => inc.id === updated.id ? updated : inc)); } else { setIncidences([...incidences, updated]); } toast({ title: "Configuración guardada" }); }}
+                onDelete={(id) => { setIncidences(incidences.filter(inc => inc.id !== id)); toast({ title: "Incidencia eliminada", variant: "destructive" }); }}
+              />
+            </TabsContent>
+            <TabsContent value="flujo">
+              <ApprovalFlowLibrary
+                flows={approvalFlows}
+                incidences={incidences}
+                onSave={(flow) => { const exists = approvalFlows.some(f => f.id === flow.id); if (exists) { setApprovalFlows(approvalFlows.map(f => f.id === flow.id ? flow : f)); } else { setApprovalFlows([...approvalFlows, flow]); } toast({ title: exists ? "Flujo actualizado" : "Flujo creado" }); }}
+                onDelete={(id) => { setApprovalFlows(approvalFlows.filter(f => f.id !== id)); toast({ title: "Flujo eliminado", variant: "destructive" }); }}
+              />
+            </TabsContent>
+            <TabsContent value="festivos">
+              <HolidayCalendarView
+                holidays={holidays}
+                onAddHoliday={(date, name, desc) => { setHolidays(prev => [...prev, { id: `holiday-${Date.now()}`, date, name, description: desc, createdAt: new Date(), updatedAt: new Date() }]); toast({ title: "Día festivo agregado" }); }}
+                onUpdateHoliday={(date, name, desc) => { setHolidays(prev => prev.map(h => h.date.getDate() === date.getDate() && h.date.getMonth() === date.getMonth() && h.date.getFullYear() === date.getFullYear() ? { ...h, name, description: desc, updatedAt: new Date() } : h)); toast({ title: "Día festivo actualizado" }); }}
+                onDeleteHoliday={(date) => { setHolidays(prev => prev.filter(h => !(h.date.getDate() === date.getDate() && h.date.getMonth() === date.getMonth() && h.date.getFullYear() === date.getFullYear()))); toast({ title: "Día festivo eliminado" }); }}
+              />
+            </TabsContent>
+          </Tabs>
         </TabsContent>
       </Tabs>
     </div>
