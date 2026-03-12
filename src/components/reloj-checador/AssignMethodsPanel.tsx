@@ -19,7 +19,7 @@ interface AssignMethodsPanelProps {
 
 export const AssignMethodsPanel = ({ onAssign, onClose, selectedCount, offices, initialOfficeId, initialMethods }: AssignMethodsPanelProps) => {
   const [selectedOfficeId, setSelectedOfficeId] = useState<string>(initialOfficeId || "");
-  const [methods, setMethods] = useState<Employee['checkMethods']>(initialMethods || { app: false, qr: false, biometric: false, facial: false });
+  const [methods, setMethods] = useState<Employee['checkMethods']>(initialMethods || { app: false, biometric: false });
   const selectedOffice = offices.find(office => office.id === selectedOfficeId);
 
   useEffect(() => {
