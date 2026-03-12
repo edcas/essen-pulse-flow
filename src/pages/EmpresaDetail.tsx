@@ -244,6 +244,18 @@ export default function EmpresaDetail() {
   const [diagnosticoInsight, setDiagnosticoInsight] = useState(defaultDiagnosticoInsight);
   const [isEditingDiagnostico, setIsEditingDiagnostico] = useState(false);
   const [expandedEval, setExpandedEval] = useState<number | null>(null);
+  const { toast } = useToast();
+
+  // Reloj Checador state
+  const [devices] = useState<Device[]>([
+    { id: "1", name: "Reloj Comedor", serialNumber: "SN-123456", model: "ZKTeco MB460", assignedLocation: "Oficina Central", status: "online" },
+    { id: "2", name: "Reloj Recepción", serialNumber: "SN-789012", model: "ZKTeco MB460", status: "unverified" },
+  ]);
+
+  // Incidencias state
+  const [incidences, setIncidences] = useState<IncidenceConfig[]>(defaultIncidences);
+  const [approvalFlows, setApprovalFlows] = useState<ApprovalFlow[]>(defaultApprovalFlows);
+  const [holidays, setHolidays] = useState<Holiday[]>(defaultHolidays);
 
   if (!empresa) {
     return (
